@@ -35,8 +35,16 @@ Az újraírt, tiszta VBA kódbázis fokozatosan kerül bevezetésre:
 | `vba/clean/modul/modDialogs.bas` | `PickExcelFile`, `PickWordFile`, `PickFolder`, `AskLong` – UI dialógusok |
 | `vba/clean/modul/modTableUtils.bas` | `FindTableByName`, `ColIndex`, `SafeValD`, `IsFlagX` – ListObject segédfüggvények |
 
+### 2. kör – Clean Diákadat import
+| Modul | Tartalom |
+|---|---|
+| `vba/clean/modul/modImportCore.bas` | `OpenSourceWb`, `SafeCloseWb`, `BuildHeaderMap`, `GetSheetByNameOrPrompt`, `FirstMatchingHeaderCol`, `BuildDestIndex`, `WriteIfEmpty` – közös import segédek |
+| `vba/clean/modul/modImportDiakadat.bas` | `ImportDiakadat_Clean` – Diákadat non-destructive import, konfigurálható forráskulcs headerrel |
+
+**Makró futtatása:** `ImportDiakadat_Clean` (a fájlt a VBA Editorba kell importálni a `vba/clean/modul/` mappából).
+
 ### Következő körök
-- **Import modulok** – Diakadat, Kozponti, Bizi import logikájának átvezetése a core utilokra.
+- **Import modulok** – Kozponti, Bizi import logikájának átvezetése a core utilokra.
 - **Pontszámítás** – `PontSzamitas` és `BiziPontok` logika tisztán, core utilokkal.
 - **Rangsor** – Rangsorolas és prioritásos rangsor újraírása.
 - **Export** – PDF/Word export (`modWordPdfExport`) integrálása a core utilokkal.
