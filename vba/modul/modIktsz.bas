@@ -77,12 +77,20 @@ Private Sub FillIktszConditionalSequential(ByVal tableName As String, ByVal ikts
     issuedCol = FindColumnIndex(lo, issuedColName)
 
     If iktszCol = 0 Or bizCol = 0 Or dateCol = 0 Or mailCol = 0 Or issuedCol = 0 Then
-        MsgBox "Hiányzik valamelyik szükséges oszlop: '" & iktszColName & "', '" & bizottsagColName & "', dátum_nap/idopont_nap, mail/email, '" & issuedColName & "'.", vbCritical
+        MsgBox "Hiányzik valamelyik szükséges oszlop: '" & iktszColName & "', '" & bizottsagColName & "', " & CandidatesToText(dateColumnCandidates) & ", " & CandidatesToText(mailColumnCandidates) & ", '" & issuedColName & "'.", vbCritical
+        Exit Sub
+    End If
+
+    Dim maxExisting As Long
+    maxExisting = MaxNumericColumnValue(lo, iktszCol)
+
+    If maxExisting >= 2147483647# Then
+        MsgBox "Az iktsz oszlopban elérted a Long típus maximumát (2147483647).", vbCritical
         Exit Sub
     End If
 
     Dim defaultStart As Long
-    defaultStart = MaxNumericColumnValue(lo, iktszCol) + 1
+    defaultStart = maxExisting + 1
     If defaultStart < 1 Then defaultStart = 1
 
     Dim nextIktsz As Long
@@ -160,12 +168,21 @@ Private Function MaxNumericColumnValue(ByVal lo As ListObject, ByVal colIndex As
         If valueText <> vbNullString Then
             If IsNumeric(valueText) Then
                 valueNum = CDbl(valueText)
+                If valueNum > 2147483647# Then valueNum = 2147483647#
                 If valueNum > MaxNumericColumnValue Then
                     MaxNumericColumnValue = CLng(valueNum)
                 End If
             End If
         End If
     Next r
+End Function
+
+Private Function CandidatesToText(ByVal names As Variant) As String
+    Dim i As Long
+    For i = LBound(names) To UBound(names)
+        If i > LBound(names) Then CandidatesToText = CandidatesToText & "/"
+        CandidatesToText = CandidatesToText & CStr(names(i))
+    Next i
 End Function
 
 Private Function AskStartNumber(ByVal title As String, ByVal prompt As String, ByVal defaultValue As Long, ByRef resultValue As Long) As Boolean
