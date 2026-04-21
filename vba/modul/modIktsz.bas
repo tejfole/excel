@@ -193,7 +193,7 @@ Private Function BuildKeyFromRow(ByVal tbl As ListObject, ByVal rowIdx As Long, 
     Dim key As String
 
     For i = LBound(keyIndexes) To UBound(keyIndexes)
-        part = Trim$(CStr(tbl.DataBodyRange.Cells(rowIdx, CLng(keyIndexes(i))).value))
+        part = Trim$(CStr(tbl.DataBodyRange.Cells(rowIdx, keyIndexes(i)).value))
         If part = "" Then
             BuildKeyFromRow = ""
             Exit Function
@@ -214,7 +214,7 @@ Private Function IsRowEligible(ByVal tbl As ListObject, ByVal rowIdx As Long, By
     End If
 
     For i = LBound(requiredIndexes) To UBound(requiredIndexes)
-        v = Trim$(CStr(tbl.DataBodyRange.Cells(rowIdx, CLng(requiredIndexes(i))).value))
+        v = Trim$(CStr(tbl.DataBodyRange.Cells(rowIdx, requiredIndexes(i)).value))
         If v = "" Then Exit Function
     Next i
 

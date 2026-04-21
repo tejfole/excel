@@ -8,12 +8,14 @@ Option Explicit
 ' Kiosztás: meglévő iktsz-ek megtartása és a legnagyobbtól folytatás
 ' ============================================================================
 Public Sub FillIktszColumn(Optional control As IRibbonControl)
-    FillIktsz "diakadat", _
-              Array("bizottsag", "datum_nap"), _
-              "iktsz", _
-              1, _
-              Array("bizottsag", "datum_nap", "mail", "idopont_kiadva"), _
-              True, _
-              False, _
-              False
+    If FillIktsz("diakadat", _
+                 Array("bizottsag", "datum_nap"), _
+                 "iktsz", _
+                 1, _
+                 Array("bizottsag", "datum_nap", "mail", "idopont_kiadva"), _
+                 True, _
+                 False, _
+                 False) Then
+        MsgBox "Az iktsz oszlop feltételesen sikeresen frissítve.", vbInformation
+    End If
 End Sub
