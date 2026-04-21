@@ -40,3 +40,12 @@ Az újraírt, tiszta VBA kódbázis fokozatosan kerül bevezetésre:
 - **Pontszámítás** – `PontSzamitas` és `BiziPontok` logika tisztán, core utilokkal.
 - **Rangsor** – Rangsorolas és prioritásos rangsor újraírása.
 - **Export** – PDF/Word export (`modWordPdfExport`) integrálása a core utilokkal.
+
+## Iktsz kitöltés (közös mag)
+
+Az iktsz kiosztás közös függvénye: `vba/modul/modIktsz.bas` → `FillIktsz`.
+
+Visszafelé kompatibilis wrapper belépési pontok:
+- `IktszIskolaErthez.KitoltIktsz_TablaAutomatikusan` (kulcs: `isk_nev`)
+- `IktszSzamFeltoltese.KitoltIktsz_TablaAutomatikusan` (kulcs: `oktazon`)
+- `SendMailSzobeliMeghivo.FillIktszColumn` (feltételes: `bizottsag+datum_nap`, kötelező: `mail`, `idopont_kiadva`, meglévő iktsz folytatása)
