@@ -1,6 +1,8 @@
 Attribute VB_Name = "modIktsz"
 Option Explicit
 
+Private Const MAX_LONG_VALUE As Double = 2147483647#
+
 ' Központi iktsz kiosztó modul.
 ' Módok:
 ' 1) lista / intézményi értesítés: group-by isk_nev -> iktsz
@@ -84,8 +86,8 @@ Private Sub FillIktszConditionalSequential(ByVal tableName As String, ByVal ikts
     Dim maxExisting As Long
     maxExisting = MaxNumericColumnValue(lo, iktszCol)
 
-    If maxExisting >= 2147483647# Then
-        MsgBox "Az iktsz oszlopban elérted a Long típus maximumát (2147483647).", vbCritical
+    If maxExisting >= MAX_LONG_VALUE Then
+        MsgBox "Az iktsz oszlopban elérted a Long típus maximumát (" & CStr(MAX_LONG_VALUE) & ").", vbCritical
         Exit Sub
     End If
 
@@ -168,7 +170,7 @@ Private Function MaxNumericColumnValue(ByVal lo As ListObject, ByVal colIndex As
         If valueText <> vbNullString Then
             If IsNumeric(valueText) Then
                 valueNum = CDbl(valueText)
-                If valueNum > 2147483647# Then valueNum = 2147483647#
+                If valueNum > MAX_LONG_VALUE Then valueNum = MAX_LONG_VALUE
                 If valueNum > MaxNumericColumnValue Then
                     MaxNumericColumnValue = CLng(valueNum)
                 End If
