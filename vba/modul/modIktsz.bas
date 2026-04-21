@@ -2,6 +2,7 @@ Attribute VB_Name = "modIktsz"
 Option Explicit
 
 Private Const MAX_LONG_VALUE As Long = 2147483647
+Private Const MIN_LONG_VALUE As Currency = -2147483648@
 Private Const ISSUED_FLAG As String = "x"
 
 ' Központi iktsz kiosztó modul.
@@ -228,7 +229,7 @@ Private Function AskStartNumber(ByVal title As String, ByVal prompt As String, B
 
     Dim numericValue As Double
     numericValue = CDbl(userInput)
-    If numericValue < (CDbl(-2147483647) - 1#) Or numericValue > MAX_LONG_VALUE Then
+    If numericValue < MIN_LONG_VALUE Or numericValue > MAX_LONG_VALUE Then
         MsgBox "A megadott érték kívül esik a Long tartományon. A művelet megszakítva.", vbExclamation
         Exit Function
     End If
