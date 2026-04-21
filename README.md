@@ -23,6 +23,18 @@ A `vba/clean/modul/` mappában található clean rewrite `*.bas` fájlokat, ille
 
 A munkalaphoz tartozó `.cls` fájlokat (`vba/munkalap/`) szintén manuálisan kell importálni, vagy a meglévő munkalapmodulba kell bemásolni.
 
+## Iktsz központi modul
+
+- A központi iktsz logika a `vba/modul/modIktsz.bas` modulban található.
+- Támogatott módok:
+  1. `lista` intézményi értesítés (`isk_nev` csoportos iktsz)
+  2. `lista` határozat / szóbeli kiértesítés felvettek-elutasítottak (`oktazon` csoportos iktsz)
+  3. `diakadat` szóbeli időpont kiértesítés (feltételes, üres iktsz-re, meglévő max utáni folytatással)
+- Wrapper belépési pontok:
+  - `IktszIskolaErthez.KitoltIktsz_TablaAutomatikusan`
+  - `IktszSzamFeltoltese.KitoltIktsz_TablaAutomatikusan`
+  - `SendMailSzobeliMeghivo.FillIktszColumn`
+
 ## Clean rewrite plan
 
 Az újraírt, tiszta VBA kódbázis fokozatosan kerül bevezetésre:
