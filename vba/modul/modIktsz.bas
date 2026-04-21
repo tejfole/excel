@@ -2,7 +2,7 @@ Attribute VB_Name = "modIktsz"
 Option Explicit
 
 Private Const MAX_LONG_VALUE As Long = 2147483647
-Private Const MIN_LONG_VALUE As Double = -2147483648#
+Private Const ISSUED_FLAG As String = "x"
 
 ' Központi iktsz kiosztó modul.
 ' Módok:
@@ -19,7 +19,7 @@ Public Sub Iktsz_Lista_HatarozatSzobeli(Optional control As IRibbonControl)
 End Sub
 
 Public Sub Iktsz_Diakadat_SzobeliIdopont(Optional control As IRibbonControl)
-    FillIktszConditionalSequential "diakadat", "iktsz", "bizottsag", Array("datum_nap", "idopont_nap"), Array("mail", "email"), "idopont_kiadva", "x"
+    FillIktszConditionalSequential "diakadat", "iktsz", "bizottsag", Array("datum_nap", "idopont_nap"), Array("mail", "email"), "idopont_kiadva", ISSUED_FLAG
 End Sub
 
 Private Sub FillIktszByKey(ByVal tableName As String, ByVal keyColName As String, ByVal iktszColName As String, ByVal modeLabel As String, ByVal defaultStart As Long)
@@ -171,18 +171,21 @@ Private Function MaxNumericColumnValue(ByVal lo As ListObject, ByVal colIndex As
     Dim r As ListRow
     Dim valueText As String
     Dim valueNum As Double
+    Dim maxValue As Long
 
     For Each r In lo.ListRows
         valueText = Trim$(CStr(r.Range(1, colIndex).Value))
         If valueText <> vbNullString Then
             If IsNumeric(valueText) Then
                 valueNum = CDbl(valueText)
-                If valueNum > MaxNumericColumnValue Then
-                    MaxNumericColumnValue = CLng(valueNum)
+                If valueNum > maxValue Then
+                    maxValue = CLng(valueNum)
                 End If
             End If
         End If
     Next r
+
+    MaxNumericColumnValue = maxValue
 End Function
 
 Private Function CandidatesToText(ByVal names As Variant) As String
@@ -225,7 +228,7 @@ Private Function AskStartNumber(ByVal title As String, ByVal prompt As String, B
 
     Dim numericValue As Double
     numericValue = CDbl(userInput)
-    If numericValue < MIN_LONG_VALUE Or numericValue > MAX_LONG_VALUE Then
+    If numericValue < (CDbl(-2147483647) - 1#) Or numericValue > MAX_LONG_VALUE Then
         MsgBox "A megadott érték kívül esik a Long tartományon. A művelet megszakítva.", vbExclamation
         Exit Function
     End If
