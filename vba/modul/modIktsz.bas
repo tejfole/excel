@@ -2,6 +2,7 @@ Attribute VB_Name = "modIktsz"
 Option Explicit
 
 Private Const MAX_LONG_VALUE As Long = 2147483647
+Private Const MIN_LONG_VALUE As Double = -2147483648#
 
 ' Központi iktsz kiosztó modul.
 ' Módok:
@@ -80,6 +81,11 @@ Private Sub FillIktszConditionalSequential(ByVal tableName As String, ByVal ikts
 
     If iktszCol = 0 Or bizCol = 0 Or dateCol = 0 Or mailCol = 0 Or issuedCol = 0 Then
         MsgBox "Hiányzik valamelyik szükséges oszlop: '" & iktszColName & "', '" & bizottsagColName & "', " & CandidatesToText(dateColumnCandidates) & ", " & CandidatesToText(mailColumnCandidates) & ", '" & issuedColName & "'.", vbCritical
+        Exit Sub
+    End If
+
+    If ColumnHasNumericAboveMaxLong(lo, iktszCol) Then
+        MsgBox "Az iktsz oszlopban a Long maximumot meghaladó érték található.", vbCritical
         Exit Sub
     End If
 
@@ -171,7 +177,6 @@ Private Function MaxNumericColumnValue(ByVal lo As ListObject, ByVal colIndex As
         If valueText <> vbNullString Then
             If IsNumeric(valueText) Then
                 valueNum = CDbl(valueText)
-                If valueNum > MAX_LONG_VALUE Then valueNum = MAX_LONG_VALUE
                 If valueNum > MaxNumericColumnValue Then
                     MaxNumericColumnValue = CLng(valueNum)
                 End If
@@ -188,6 +193,25 @@ Private Function CandidatesToText(ByVal names As Variant) As String
     Next i
 End Function
 
+Private Function ColumnHasNumericAboveMaxLong(ByVal lo As ListObject, ByVal colIndex As Long) As Boolean
+    Dim r As ListRow
+    Dim valueText As String
+    Dim valueNum As Double
+
+    For Each r In lo.ListRows
+        valueText = Trim$(CStr(r.Range(1, colIndex).Value))
+        If valueText <> vbNullString Then
+            If IsNumeric(valueText) Then
+                valueNum = CDbl(valueText)
+                If valueNum > MAX_LONG_VALUE Then
+                    ColumnHasNumericAboveMaxLong = True
+                    Exit Function
+                End If
+            End If
+        End If
+    Next r
+End Function
+
 Private Function AskStartNumber(ByVal title As String, ByVal prompt As String, ByVal defaultValue As Long, ByRef resultValue As Long) As Boolean
     Dim userInput As String
     userInput = InputBox(prompt, title, CStr(defaultValue))
@@ -201,7 +225,7 @@ Private Function AskStartNumber(ByVal title As String, ByVal prompt As String, B
 
     Dim numericValue As Double
     numericValue = CDbl(userInput)
-    If numericValue < -2147483648# Or numericValue > MAX_LONG_VALUE Then
+    If numericValue < MIN_LONG_VALUE Or numericValue > MAX_LONG_VALUE Then
         MsgBox "A megadott érték kívül esik a Long tartományon. A művelet megszakítva.", vbExclamation
         Exit Function
     End If
