@@ -83,7 +83,7 @@ Public Function FillIktsz(ByVal tableName As String, _
     End If
 
     If askStart Then
-        nextNum = AskForStart(nextNum)
+        nextNum = PromptForStartingIktsz(nextNum)
         If nextNum = 0 Then Exit Function
     End If
 
@@ -109,22 +109,22 @@ Public Function FillIktsz(ByVal tableName As String, _
     FillIktsz = True
 End Function
 
-Private Function AskForStart(ByVal defaultStart As Long) As Long
+Private Function PromptForStartingIktsz(ByVal defaultStart As Long) As Long
     Dim raw As String
     raw = Trim$(InputBox("Add meg a kezdő iktsz számot:", "Kezdő iktsz", CStr(defaultStart)))
 
     If raw = "" Then
-        AskForStart = 0
+        PromptForStartingIktsz = 0
         Exit Function
     End If
 
     If Not IsNumeric(raw) Then
         MsgBox "A kezdő iktsz csak szám lehet.", vbExclamation
-        AskForStart = 0
+        PromptForStartingIktsz = 0
         Exit Function
     End If
 
-    AskForStart = CLng(raw)
+    PromptForStartingIktsz = CLng(raw)
 End Function
 
 Private Function FindListObjectInWorkbook(ByVal tableName As String) As ListObject
