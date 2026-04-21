@@ -1,7 +1,7 @@
 Attribute VB_Name = "modIktsz"
 Option Explicit
 
-Private Const MAX_LONG_VALUE As Double = 2147483647#
+Private Const MAX_LONG_VALUE As Long = 2147483647
 
 ' Központi iktsz kiosztó modul.
 ' Módok:
@@ -86,6 +86,7 @@ Private Sub FillIktszConditionalSequential(ByVal tableName As String, ByVal ikts
     Dim maxExisting As Long
     maxExisting = MaxNumericColumnValue(lo, iktszCol)
 
+    ' A következő értékhez +1 kell, ezért MAX_LONG esetén már nem folytatható.
     If maxExisting >= MAX_LONG_VALUE Then
         MsgBox "Az iktsz oszlopban elérted a Long típus maximumát (" & CStr(MAX_LONG_VALUE) & ").", vbCritical
         Exit Sub
@@ -194,10 +195,17 @@ Private Function AskStartNumber(ByVal title As String, ByVal prompt As String, B
 
     If userInput = vbNullString Then Exit Function
     If Not IsNumeric(userInput) Then
-        MsgBox "A megadott érték nem szám.", vbExclamation
+        MsgBox "A megadott érték nem szám. A művelet megszakítva.", vbExclamation
         Exit Function
     End If
 
-    resultValue = CLng(userInput)
+    Dim numericValue As Double
+    numericValue = CDbl(userInput)
+    If numericValue < -2147483648# Or numericValue > MAX_LONG_VALUE Then
+        MsgBox "A megadott érték kívül esik a Long tartományon. A művelet megszakítva.", vbExclamation
+        Exit Function
+    End If
+
+    resultValue = CLng(numericValue)
     AskStartNumber = True
 End Function
